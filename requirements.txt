@@ -1,0 +1,6 @@
+pillow
+coverage
+docutils
+epydoc
+nose
+pylint
