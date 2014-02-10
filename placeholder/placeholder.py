@@ -49,58 +49,6 @@ from PIL import ImageColor
 from PIL import ImageFont
 from PIL import ImageOps
 
-class NullHandler(logging.Handler):
-    """NullHanlder for the logging setup
-    """
-
-    def emit(self, record):
-        u"""NoOp ``emit`` attachable to any logger.
-        """
-        pass
-
-_null_handler = NullHandler()
-del(NullHandler)
-
-
-
-
-def _Property(func):
-    """Decorator to make a property
-
-    Sample Code::
-
-    	>>> class Test(object):
-    	...     @_Property
-    	...     def prop():
-    	...             def fget(self):
-    	...                     try:
-    	...                         return self.val
-    	...                     except (AttributeError, ) as error:
-    	...                         return None
-    	...             def fset(self, val):
-    	...                     self.val = val
-    	...             return locals()
-    	>>> t = Test()
-    	>>> t.prop # return None
-    	>>> t.prop = 3
-    	>>> t.prop
-    	3
-    	>>> t.val
-    	3
-    """
-    log = logging.getLogger("Property")
-    log.debug(u'Property access on %r', func.__name__)
-    return property(**func())
-
-class Base(object):
-    u"""Base Object to have a common starting point.
-    """
-    def __init__(self):
-        self._name = self.__class__.__name__
-        self.log = logging.getLogger(self._name)
-        self.log.addHandler(_null_handler)
-
-
 class Size(Base):
     u"""Simple wrapper to hold a size.
     """
@@ -117,12 +65,13 @@ class Size(Base):
         # make sure the parameters actually are integers
         self._width = int(width)
         self._height = int(height)
-    @_Property
+        
+    @property
     def width():
         def fget(self):
             return self._width
         return locals()
-    @_Property
+    @property
     def height():
         def fget(self):
             return self._height
