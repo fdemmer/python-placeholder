@@ -43,83 +43,63 @@ from PIL import ImageFont
 from PIL import ImageOps
 
 
-
 get_color = lambda name: ImageColor.getrgb(name)
 
 class PlaceHolderImage:
     """Create an image useable for wireframing websites.
     """
 
-    def __init__(self, width, height,
-                 fg_color=Color.BLACK,
-                 bg_color=Color.WHITE,
+    def __init__(self, width, height, path,
+                 fg_color=get_color('black'),
+                 bg_color=get_color('white'),
                  text=None,
-                 font=u'Verdana.ttf',
-                 fontsize=24,
+                 font=u'fonts/Verdana.ttf',
+                 fontsize=42,
                  encoding=u'unic',
-                 mode=Color.MODE,
+                 mode='RGBA',
                  fmt=u'PNG'):
 
-        self._width = width
-        self._height = height
-        self._bg_color = bg_color
-        self._fg_color = fg_color
-        self._text = text
-        self._font = font
-        self._fontsize = fontsize
-        self._encoding = encoding
+        self.path = path
+        self.width = width
+        self.height = height
+        self.size = width, height
+        self.bg_color = bg_color
+        self.fg_color = fg_color
+        self.text = text if text else '{0}x{1}'.format(width, height)
+        self.font = font
+        self.fontsize = fontsize
+        self.encoding = encoding
+        self.mode = mode
+        self.fmt = fmt
 
-        self._size = Size(self._width, self._height)
-        self._mode = mode
-        self._fmt = fmt
+    def save_image(self):
+        try:
+            font = ImageFont.truetype(self.font, size=self.fontsize, encoding=self.encoding)
+        except IOError:
+            font = ImageFont.load_default()
+            import ipdb; ipdb.set_trace()
 
-    def save(self):
+        result_img = Image.new(self.mode, self.size, self.bg_color)
 
-        from tempfile import NamedTemporaryFile
-        with NamedTemporaryFile(delete=False) as target:
-            result_img = Image.new(self._mode, self._size, self._bg_color)
-            img_width, img_height = result_img.size
 
-            self.log.debug(u'result_img.size: %r, self._size: %r',
-                           result_img.size, self._size)
 
-            if self._text is None:
-                self._text = "x".join([str(n) for n in self._size])
-            if self._text is not None:
-                try:
-                    font = ImageFont.truetype(
-                        self._font,
-                        size=self._fontsize,
-                        encoding=self._encoding)
-                except (IOError, ) as error:
-                    font = ImageFont.load_default()
+        text_size = font.getsize(self.text)
+        
+        text_img = Image.new("RGBA", self.size, self.bg_color)
 
-                self.log.debug(u'The text is: %r', self._text)
-                txt_size = Size(*font.getsize(self._text))
-                self.log.debug(u'Text Size: %r', txt_size)
-                txt_img = Image.new("RGBA", self._size, self._bg_color)
-                self.log.debug(u'Size of txt_img: %r', txt_size)
+        left = self.size[0] / 2 - text_size[0] / 2
+        top = self.size[1] / 2 - text_size[1] / 2
+        
+        drawing = ImageDraw.Draw(text_img)
+        drawing.text((left, top),
+                     self.text,
+                     font=font,
+                     fill=self.fg_color)
 
-                drawing = ImageDraw.Draw(txt_img)
-                left = self._size.width / 2 - txt_size.width / 2
-                top = self._size.height / 2 - txt_size.height / 2
-                drawing.text((left, top, ),
-                             self._text,
-                             font=font,
-                             fill=self._fg_color)
+        txt_img = ImageOps.fit(text_img, self.size, method=Image.BICUBIC, centering=(0.5, 0.5))
 
-                txt_img = ImageOps.fit(txt_img,
-                                       result_img.size,
-                                       method=Image.BICUBIC,
-                                       centering=(0.5, 0.5)
-                                       )
-                result_img.paste(txt_img)
-            # result_img.show()
-            # sys.exit(1)
-            txt_img.save(target, self._fmt)
-            self.log.debug(u'Wrote Image to: %r', target.name)
-            del(result_img)
-        return target.name
+        result_img.paste(txt_img)
+        txt_img.save(self.path, self.fmt)
 
 
 
