@@ -61,15 +61,7 @@ class NullHandler(logging.Handler):
 _null_handler = NullHandler()
 del(NullHandler)
 
-if __name__ == u'__main__':
-    datefmt = u"%F %H:%M:%S"
-    logfmt = u"%(asctime)s - %(levelname)s::%(name)s - %(message)s"
-    logging.basicConfig(level=logging.NOTSET,
-                        format=logfmt,
-                        datefmt=datefmt)
-    # logging.getLogger(u'').addHandler(
-    #     logging.StreamHandler()
-    #     )
+
 
 
 def _Property(func):
@@ -331,26 +323,4 @@ class TestPlaceHolderImage(unittest.TestCase):
         # i = PlaceHolderImage(640, 480, c.gray)
         # i._txt_img()
         pass
-if __name__ == '__main__':
-    log = logging.getLogger(u'__main__')
-    width = int(sys.argv[1])
-    height = int(sys.argv[2])
-    c_fg = getattr(Color(), sys.argv[3])
-    c_bg = getattr(Color(), sys.argv[4])
-    try:
-        txt = sys.argv[5]
-    except (IndexError, ) as error:
-        log.debug(u'No text given')
-        txt = None
 
-    img = PlaceHolderImage(width, height, c_fg, c_bg, text=txt)
-    result = img.save()
-    print result
-    # os.unlink(result)
-
-# Local Variables:
-# mode:python
-# comment-column:0
-# End:
-
-# vim: set ts=4 sts=4 expandtab encoding=utf-8:

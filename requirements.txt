@@ -1,6 +1,6 @@
 pillow
 coverage
-docutils
-epydoc
+#docutils
+#epydoc
 nose
 pylint
