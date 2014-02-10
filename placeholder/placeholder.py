@@ -51,7 +51,7 @@ class PlaceHolderImage:
 
     def __init__(self, width, height, path,
                  fg_color=get_color('black'),
-                 bg_color=get_color('white'),
+                 bg_color=get_color('grey'),
                  text=None,
                  font=u'Verdana.ttf',
                  fontsize=42,
