@@ -2,10 +2,8 @@ Simple class to create placeholder images for wireframing.
 
 
 install by 
-.. code:: bash
+.. code:: shell
 		$ pip install python-placeholder
-		# or
-		$ python setup.py install
 
 
 Example:
