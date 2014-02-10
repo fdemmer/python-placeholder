@@ -1,4 +1,4 @@
-Simple class to create placeholder images for wireframing.
+*Simple module for creating placeholder images*
 
 
 install by 
