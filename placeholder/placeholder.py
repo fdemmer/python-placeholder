@@ -53,7 +53,7 @@ class PlaceHolderImage:
                  fg_color=get_color('black'),
                  bg_color=get_color('white'),
                  text=None,
-                 font=u'fonts/Verdana.ttf',
+                 font=u'Verdana.ttf',
                  fontsize=42,
                  encoding=u'unic',
                  mode='RGBA',
@@ -77,17 +77,14 @@ class PlaceHolderImage:
             font = ImageFont.truetype(self.font, size=self.fontsize, encoding=self.encoding)
         except IOError:
             font = ImageFont.load_default()
-            import ipdb; ipdb.set_trace()
 
         result_img = Image.new(self.mode, self.size, self.bg_color)
-
-
-
-        text_size = font.getsize(self.text)
         
+        text_size = font.getsize(self.text)
         text_img = Image.new("RGBA", self.size, self.bg_color)
 
-        left = self.size[0] / 2 - text_size[0] / 2
+        #position for the text:
+        left = self.size[0] / 2 - text_size[0] / 2 
         top = self.size[1] / 2 - text_size[1] / 2
         
         drawing = ImageDraw.Draw(text_img)
