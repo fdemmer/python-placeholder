@@ -8,8 +8,8 @@ reqs = [str(ir.req) for ir in install_reqs]
 setup(
     name='python-placeholder',
     version='0.1',
-    description='Placeholder is a simple little python module that creates (drumroll..) placeholder images',
-    author="Martin Marcher",
+    description='Placeholder is a simple little python module that creates (drumroll..) placeholder images, based on work of Martin Marcher',
+    author="Visgean Skeloru",
     url='https://github.com/Visgean/python-placeholder',
     packages=['placeholder'],
     include_package_data=True,
