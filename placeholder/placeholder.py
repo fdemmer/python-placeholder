@@ -49,7 +49,9 @@ from PIL import ImageColor
 from PIL import ImageFont
 from PIL import ImageOps
 
+
 class Size(Base):
+
     u"""Simple wrapper to hold a size.
     """
 
@@ -65,28 +67,32 @@ class Size(Base):
         # make sure the parameters actually are integers
         self._width = int(width)
         self._height = int(height)
-        
+
     @property
     def width():
         def fget(self):
             return self._width
         return locals()
+
     @property
     def height():
         def fget(self):
             return self._height
         return locals()
+
     def __repr__(self):
         u"""Simple Identifier for the Size instance.
         """
         return u"<%s Object (%dx%d)>" % (self._name,
                                          self._width,
                                          self._height, )
+
     def __iter__(self):
         u"""Part of the implementation of the iterator protocol.
         """
         yield self._width
         yield self._height
+
     def __getitem__(self, key):
         u"""Part of the implementation of the sequence protocol.
         """
@@ -96,14 +102,17 @@ class Size(Base):
             return self._height
         else:
             raise IndexError(u'list index out of range')
+
     def __len__(self):
         u"""Part of the implementation of the sequence protocol.
         """
         return len((self._width, self._height, ))
+
     def __min__(self):
         u"""Part of the implementation of the sequence protocol.
         """
         return min(self._width, self._height)
+
     def __max__(self):
         u"""Part of the implementation of the sequence protocol.
         """
@@ -111,26 +120,35 @@ class Size(Base):
 
 
 class TestSize(unittest.TestCase):
+
     u"""Tests the ``Size`` class.
     """
+
     def test_width(self):
         s = Size(1, 2)
         self.failUnlessEqual(s.width, 1)
+
     def test_height(self):
         s = Size(1, 2)
         self.failUnlessEqual(s.height, 2)
+
     def test_iter(self):
         self.assertEqual(list(Size(1, 2)), [1, 2, ])
+
     def test_slice0(self):
         Size(1, 2)[0]
+
     def test_slice1(self):
         Size(1, 2)[1]
+
     def test_IndexError(self):
         def slice():
             return Size(1, 2)[2]
         self.assertRaises(IndexError, slice)
+
     def test_min(self):
         self.assertEqual(min(Size(1, 2)), 1)
+
     def test_max(self):
         self.assertEqual(max(Size(1, 2)), 2)
 
@@ -161,19 +179,25 @@ class Color(Base):
 
 
 class TestColor(unittest.TestCase):
+
     u"""Test the ``Color`` class.
     """
 
     def test_black(self):
         self.assertEqual(Color.BLACK, ImageColor.getrgb(u'black'))
+
     def test_white(self):
         self.assertEqual(Color.WHITE, ImageColor.getrgb(u'white'))
+
     def test_red(self):
         self.assertEqual(Color.RED, ImageColor.getrgb(u'red'))
+
     def test_green(self):
         self.assertEqual(Color.GREEN, ImageColor.getrgb(u'green'))
+
     def test_blue(self):
         self.assertEqual(Color.BLUE, ImageColor.getrgb(u'blue'))
+
     def test_all_colors(self):
         u"""Test all defined colors from PIL
         """
@@ -181,7 +205,9 @@ class TestColor(unittest.TestCase):
         for elem in ImageColor.colormap:
             self.assertEqual(ImageColor.colormap[elem], getattr(c, elem))
 
+
 class PlaceHolderImage(Base):
+
     u"""Create an image useable for wireframing webistes.
     """
 
@@ -238,20 +264,18 @@ class PlaceHolderImage(Base):
                 self.log.debug(u'Size of txt_img: %r', txt_size)
 
                 drawing = ImageDraw.Draw(txt_img)
-                left = self._size.width/2 - txt_size.width/2
-                top = self._size.height/2 - txt_size.height/2
+                left = self._size.width / 2 - txt_size.width / 2
+                top = self._size.height / 2 - txt_size.height / 2
                 drawing.text((left, top, ),
                              self._text,
                              font=font,
                              fill=self._fg_color)
 
-
-
                 txt_img = ImageOps.fit(txt_img,
                                        result_img.size,
                                        method=Image.BICUBIC,
                                        centering=(0.5, 0.5)
-                                   )
+                                       )
                 result_img.paste(txt_img)
             # result_img.show()
             # sys.exit(1)
@@ -262,14 +286,16 @@ class PlaceHolderImage(Base):
 
 
 class TestPlaceHolderImage(unittest.TestCase):
+
     u"""Tests the ``PlaceHolderImage`` class.
     """
+
     def test_save(self):
         i = PlaceHolderImage(640, 480)
         i.save()
+
     def test__txt_img(self):
         # c = Color()
         # i = PlaceHolderImage(640, 480, c.gray)
         # i._txt_img()
         pass
-
