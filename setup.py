@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='python-placeholder',
-    version='0.1.3',
+    version='0.2',
     description='Placeholder is a simple little python module that creates (drumroll..) placeholder images, based on work of Martin Marcher',
     author="Visgean Skeloru",
     url='https://github.com/Visgean/python-placeholder',
