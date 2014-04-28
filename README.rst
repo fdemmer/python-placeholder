@@ -32,3 +32,7 @@ Run tests:
 You can run the testsuite with the following command::
 
     python -m unittest tests
+
+Or use tox_ to test against all supported python versions.
+
+.. _tox: https://testrun.org/tox/latest/
