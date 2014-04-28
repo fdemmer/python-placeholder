@@ -1,1 +1,1 @@
-from placeholder import PlaceHolderImage
+from .placeholder import PlaceHolderImage

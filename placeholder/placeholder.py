@@ -45,7 +45,7 @@ from PIL import ImageOps
 
 get_color = lambda name: ImageColor.getrgb(name)
 
-class PlaceHolderImage:
+class PlaceHolderImage(object):
     """Create an image useable for wireframing websites.
     """
 
@@ -79,14 +79,14 @@ class PlaceHolderImage:
             font = ImageFont.load_default()
 
         result_img = Image.new(self.mode, self.size, self.bg_color)
-        
+
         text_size = font.getsize(self.text)
         text_img = Image.new("RGBA", self.size, self.bg_color)
 
         #position for the text:
-        left = self.size[0] / 2 - text_size[0] / 2 
+        left = self.size[0] / 2 - text_size[0] / 2
         top = self.size[1] / 2 - text_size[1] / 2
-        
+
         drawing = ImageDraw.Draw(text_img)
         drawing.text((left, top),
                      self.text,
