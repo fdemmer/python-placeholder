@@ -26,11 +26,16 @@ Example:
     # write in jpeg encoding
     placeholder.save('placeholder.jpg')
 
-    # alternatively initialize with empty or custom text
-    PlaceHolderImage(300, 200, text='')
+    # alternatively initialize with empty or custom text and font
+    PlaceHolderImage(300, 200, text='', font='Verdana.ttf')
 
     # colors can be set using names or hex-tuples incl transparency
     PlaceHolderImage(300, 200, fg_color=(0, 0, 0, 0), bg_color='red')
+
+    # to draw additional things use "draw" functions
+    # two are provided, but you can write your own
+    from placeholder.draw import draw_circle, draw_cross
+    PlaceHolderImage(300, 200, draw=[draw_circle, draw_cross])
 
 
 Known bugs:
