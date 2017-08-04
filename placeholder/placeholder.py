@@ -31,7 +31,7 @@ class PlaceHolderImage(object):
         self.size = width, height
         self.bg_color = bg_color
         self.fg_color = fg_color
-        self.text = text if text else '{0}x{1}'.format(width, height)
+        self.text = text if text is not None else '{0}x{1}'.format(width, height)
         self.font = font
         self.fontsize = fontsize
         self.encoding = encoding
