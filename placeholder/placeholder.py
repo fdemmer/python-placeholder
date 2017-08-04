@@ -27,8 +27,9 @@ class PlaceHolderImage(object):
         :param fg_color: foreground color as RGB tuple
         :param bg_color: background color as RGB tuple
         :param text: text to write in the center of the image
+            (default: None, to write the image dimensions)
         :param font: TrueType font
-        :param fontsize: font size
+        :param fontsize: font size, in points (only used when font is available)
         :param encoding: font encoding
             (used with ImageFont.truetype, which defaults to Unicode)
         :param mode: color mode
@@ -40,15 +41,20 @@ class PlaceHolderImage(object):
         self.size = width, height
         self.bg_color = bg_color
         self.fg_color = fg_color
-        self.text = text if text is not None else '{0}x{1}'.format(width, height)
-        self.font = get_font(font, fontsize, encoding)
         self.mode = mode
+
+        self.font = get_font(font, fontsize, encoding)
+
+        if text is None:
+            self.text = '{}x{}'.format(width, height)
+        else:
+            self.text = text
 
     def save(self, fp, format=None, **params):
         """
         Save the image to the given filename.
 
-        This generates the image and calls PIL.Image.save().
+        This generates the image if necessary and calls PIL.Image.save().
 
         :param fp: A filename (string), pathlib.Path object or file object.
         :param format: Optional format override.  If omitted, the
