@@ -5,11 +5,10 @@ from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
 
 get_color = lambda name: ImageColor.getrgb(name)
 
-class PlaceHolderImage(object):
-    """Create an image useable for wireframing websites.
-    """
 
-    def __init__(self, width, height, path,
+class PlaceHolderImage(object):
+    """Create an image usable for wireframing websites."""
+    def __init__(self, width, height,
                  fg_color=get_color('black'),
                  bg_color=get_color('grey'),
                  text=None,
@@ -19,7 +18,6 @@ class PlaceHolderImage(object):
                  mode='RGBA',
                  fmt=u'PNG'):
 
-        self.path = path
         self.width = width
         self.height = height
         self.size = width, height
@@ -32,7 +30,7 @@ class PlaceHolderImage(object):
         self.mode = mode
         self.fmt = fmt
 
-    def save_image(self):
+    def save_image(self, filename):
         try:
             font = ImageFont.truetype(self.font, size=self.fontsize, encoding=self.encoding)
         except IOError:
@@ -43,7 +41,7 @@ class PlaceHolderImage(object):
         text_size = font.getsize(self.text)
         text_img = Image.new("RGBA", self.size, self.bg_color)
 
-        #position for the text:
+        # position for the text
         left = self.size[0] / 2 - text_size[0] / 2
         top = self.size[1] / 2 - text_size[1] / 2
 
@@ -56,4 +54,4 @@ class PlaceHolderImage(object):
         txt_img = ImageOps.fit(text_img, self.size, method=Image.BICUBIC, centering=(0.5, 0.5))
 
         result_img.paste(txt_img)
-        txt_img.save(self.path, self.fmt)
+        txt_img.save(filename, self.fmt)

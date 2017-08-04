@@ -1,7 +1,7 @@
 *Simple module for creating placeholder images*
 
 
-install by 
+install by
 
 ::
 
@@ -14,8 +14,8 @@ Example:
 .. code:: python
 
         from placeholder import PlaceHolderImage
-        img = PlaceHolderImage(width = 300, height = 200, path = 'placeholder.png')
-        img.save_image()
+        img = PlaceHolderImage(width=300, height=200)
+        img.save_image('placeholder.png')
 
 
 
