@@ -35,6 +35,9 @@ class PlaceHolderImage(object):
         """
         self._image = None
 
+        assert width > 0, 'width must be > 0'
+        assert height > 0, 'height must be > 0'
+
         self.size = width, height
         self.bg_color = bg_color
         self.fg_color = fg_color
