@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from operator import sub
+
 __docformat__ = u'restructuredtext en'
 
 from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
@@ -57,12 +59,10 @@ class PlaceHolderImage(object):
 
         result_img = Image.new(self.mode, self.size, self.bg_color)
 
-        text_size = font.getsize(self.text)
         text_img = Image.new("RGBA", self.size, self.bg_color)
 
-        # position for the text
-        left = self.size[0] / 2 - text_size[0] / 2
-        top = self.size[1] / 2 - text_size[1] / 2
+        # calculate center position for the text
+        left, top = (x / 2 for x in map(sub, self.size, font.getsize(self.text)))
 
         drawing = ImageDraw.Draw(text_img)
         drawing.text((left, top),
