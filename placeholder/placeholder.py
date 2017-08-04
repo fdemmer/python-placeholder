@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from operator import sub
+
+from functools import partial
 
 from PIL import Image, ImageDraw, ImageFont
+
+from placeholder.draw import draw_text
 
 
 def get_font(name, size, encoding):
@@ -13,9 +16,9 @@ def get_font(name, size, encoding):
 
 
 class PlaceHolderImage(object):
-    def __init__(self, width, height, fg_color='darkgrey', bg_color='lightgrey',
+    def __init__(self, width, height, fg_color='darkgrey', bg_color='gainsboro',
             text=None, font='arial', fontsize=36, encoding='',
-            mode='RGBA'):
+            mode='RGBA', draw=None):
         """
         Create an image usable for wireframing websites.
 
@@ -34,6 +37,7 @@ class PlaceHolderImage(object):
             http://pillow.readthedocs.io/en/latest/handbook/concepts.html#modes)
         """
         self._image = None
+        self._draw_functions = []
 
         assert width > 0, 'width must be > 0'
         assert height > 0, 'height must be > 0'
@@ -43,23 +47,28 @@ class PlaceHolderImage(object):
         self.fg_color = fg_color
         self.mode = mode
 
-        self.font = get_font(font, fontsize, encoding)
+        # append more drawing functions
+        for func in draw or []:
+            self._draw_functions.append(func)
 
+        # text will be drawn last/on top
         if text is None:
-            self.text = '{}x{}'.format(width, height)
-        else:
-            self.text = text
+            text = '{}x{}'.format(width, height)
+        if text:
+            self._draw_functions.append(
+                partial(
+                    draw_text, text=text, fill=self.fg_color,
+                    font=get_font(font, fontsize, encoding),
+                )
+            )
 
-    def draw_text(self, text, fill=None, font=None):
-        assert self._image, 'get_image() must be called before drawing text'
-        fill = self.fg_color if fill is None else fill
-        font = self.font if font is None else font
-
-        # calculate center position for the text
-        left, top = (x / 2 for x in map(sub, self.size, font.getsize(text)))
-
+    def _draw_everything(self):
+        """
+        Call all the registered draw functions.
+        """
         drawing = ImageDraw.Draw(self._image)
-        drawing.text((left, top), text, font=font, fill=fill)
+        for func in self._draw_functions:
+            func(drawing)
 
     def get_image(self):
         """
@@ -68,8 +77,7 @@ class PlaceHolderImage(object):
         :return: the image as a PIL.Image instance
         """
         self._image = Image.new(self.mode, self.size, self.bg_color)
-        if self.text:
-            self.draw_text(self.text, fill=self.fg_color, font=self.font)
+        self._draw_everything()
         return self._image
 
     def save(self, fp, format=None, **params):
