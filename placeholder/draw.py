@@ -25,7 +25,7 @@ def draw_cross(drawing, fill='silver', width=1):
     drawing.line((0, size[1], size[0], 0), fill, width)
 
 
-def draw_circle(drawing, fill=None, outline='darkgray'):
+def draw_circle(drawing, fill=None, outline='silver'):
     size = drawing.im.size
     # diameter should be the size of the shorter dimension
     d = min(size)
