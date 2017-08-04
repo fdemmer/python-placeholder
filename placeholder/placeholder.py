@@ -8,6 +8,13 @@ from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
 get_color = lambda name: ImageColor.getrgb(name)
 
 
+def get_font(name, size, encoding):
+    try:
+        return ImageFont.truetype(name, size=size, encoding=encoding)
+    except IOError:
+        return ImageFont.load_default()
+
+
 class PlaceHolderImage(object):
     def __init__(self, width, height, fg_color=get_color('black'),
             bg_color=get_color('grey'), text=None, font=u'Verdana.ttf',
@@ -34,9 +41,7 @@ class PlaceHolderImage(object):
         self.bg_color = bg_color
         self.fg_color = fg_color
         self.text = text if text is not None else '{0}x{1}'.format(width, height)
-        self.font = font
-        self.fontsize = fontsize
-        self.encoding = encoding
+        self.font = get_font(font, fontsize, encoding)
         self.mode = mode
 
     def save(self, fp, format=None, **params):
@@ -52,22 +57,17 @@ class PlaceHolderImage(object):
            parameter should always be used.
        :param params: Extra parameters to the image writer.
         """
-        try:
-            font = ImageFont.truetype(self.font, size=self.fontsize, encoding=self.encoding)
-        except IOError:
-            font = ImageFont.load_default()
-
         result_img = Image.new(self.mode, self.size, self.bg_color)
 
         text_img = Image.new("RGBA", self.size, self.bg_color)
 
         # calculate center position for the text
-        left, top = (x / 2 for x in map(sub, self.size, font.getsize(self.text)))
+        left, top = (x / 2 for x in map(sub, self.size, self.font.getsize(self.text)))
 
         drawing = ImageDraw.Draw(text_img)
         drawing.text((left, top),
                      self.text,
-                     font=font,
+                     font=self.font,
                      fill=self.fg_color)
 
         txt_img = ImageOps.fit(text_img, self.size, method=Image.BICUBIC, centering=(0.5, 0.5))
