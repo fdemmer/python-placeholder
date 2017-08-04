@@ -1,15 +1,7 @@
 # -*- coding: utf-8 -*-
 __docformat__ = u'restructuredtext en'
 
-
-import os
-import sys
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageColor
-from PIL import ImageFont
-from PIL import ImageOps
-
+from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
 
 get_color = lambda name: ImageColor.getrgb(name)
 
@@ -65,7 +57,3 @@ class PlaceHolderImage(object):
 
         result_img.paste(txt_img)
         txt_img.save(self.path, self.fmt)
-
-
-
-
