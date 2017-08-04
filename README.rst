@@ -5,7 +5,7 @@ install by
 
 ::
 
-	$ pip install python-placeholder
+    $ pip install python-placeholder
 
 
 Example:
@@ -13,10 +13,24 @@ Example:
 
 .. code:: python
 
-        from placeholder import PlaceHolderImage
-        img = PlaceHolderImage(width=300, height=200)
-        img.save('placeholder.png')
+    from placeholder import PlaceHolderImage
 
+    placeholder = PlaceHolderImage(width=300, height=200)
+
+    # get PIL.Image instance
+    image = placeholder.get_image()
+
+    # write to a file as png
+    placeholder.save('placeholder.png')
+
+    # write in jpeg encoding
+    placeholder.save('placeholder.jpg')
+
+    # alternatively initialize with empty or custom text
+    PlaceHolderImage(300, 200, text='')
+
+    # colors can be set using names or hex-tuples incl transparency
+    PlaceHolderImage(300, 200, fg_color=(0, 0, 0, 0), bg_color='red')
 
 
 Known bugs:
