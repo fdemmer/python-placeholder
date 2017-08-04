@@ -5,6 +5,7 @@ from unittest import TestCase
 from PIL import Image
 
 from placeholder import PlaceHolderImage
+from placeholder.draw import draw_circle, draw_cross
 
 
 class PlaceHolderImageTests(TestCase):
@@ -38,3 +39,7 @@ class PlaceHolderImageTests(TestCase):
 
         imagefile = Image.open(self.filename)
         self.assertEqual(imagefile.size, (201, 199))
+
+    def test_draw_more(self):
+        ph = PlaceHolderImage(200, 100, draw=[draw_circle, draw_cross])
+        self.assertIsNotNone(ph.get_image())
