@@ -3,7 +3,7 @@ from operator import sub
 
 __docformat__ = u'restructuredtext en'
 
-from PIL import Image, ImageColor, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageColor, ImageDraw, ImageFont
 
 get_color = lambda name: ImageColor.getrgb(name)
 
@@ -36,8 +36,8 @@ class PlaceHolderImage(object):
             (default: 'RGBA', see Pillow documentation for valid modes:
             http://pillow.readthedocs.io/en/latest/handbook/concepts.html#modes)
         """
-        self.width = width
-        self.height = height
+        self._image = None
+
         self.size = width, height
         self.bg_color = bg_color
         self.fg_color = fg_color
@@ -49,6 +49,28 @@ class PlaceHolderImage(object):
             self.text = '{}x{}'.format(width, height)
         else:
             self.text = text
+
+    def draw_text(self, text, fill=None, font=None):
+        assert self._image, 'get_image() must be called before drawing text'
+        fill = self.fg_color if fill is None else fill
+        font = self.font if font is None else font
+
+        # calculate center position for the text
+        left, top = (x / 2 for x in map(sub, self.size, font.getsize(text)))
+
+        drawing = ImageDraw.Draw(self._image)
+        drawing.text((left, top), text, font=font, fill=fill)
+
+    def get_image(self):
+        """
+        Generate the image and return it.
+
+        :return: the image as a PIL.Image instance
+        """
+        self._image = Image.new(self.mode, self.size, self.bg_color)
+        if self.text:
+            self.draw_text(self.text, fill=self.fg_color, font=self.font)
+        return self._image
 
     def save(self, fp, format=None, **params):
         """
@@ -63,20 +85,6 @@ class PlaceHolderImage(object):
            parameter should always be used.
        :param params: Extra parameters to the image writer.
         """
-        result_img = Image.new(self.mode, self.size, self.bg_color)
-
-        text_img = Image.new("RGBA", self.size, self.bg_color)
-
-        # calculate center position for the text
-        left, top = (x / 2 for x in map(sub, self.size, self.font.getsize(self.text)))
-
-        drawing = ImageDraw.Draw(text_img)
-        drawing.text((left, top),
-                     self.text,
-                     font=self.font,
-                     fill=self.fg_color)
-
-        txt_img = ImageOps.fit(text_img, self.size, method=Image.BICUBIC, centering=(0.5, 0.5))
-
-        result_img.paste(txt_img)
-        txt_img.save(fp, format, **params)
+        if not self._image:
+            self.get_image()
+        self._image.save(fp, format, **params)
