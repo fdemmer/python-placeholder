@@ -15,7 +15,7 @@ Example:
 
         from placeholder import PlaceHolderImage
         img = PlaceHolderImage(width=300, height=200)
-        img.save_image('placeholder.png')
+        img.save('placeholder.png')
 
 
 
