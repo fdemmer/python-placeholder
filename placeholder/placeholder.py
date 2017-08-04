@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from operator import sub
 
-__docformat__ = u'restructuredtext en'
-
-from PIL import Image, ImageColor, ImageDraw, ImageFont
-
-get_color = lambda name: ImageColor.getrgb(name)
+from PIL import Image, ImageDraw, ImageFont
 
 
 def get_font(name, size, encoding):
@@ -16,9 +13,9 @@ def get_font(name, size, encoding):
 
 
 class PlaceHolderImage(object):
-    def __init__(self, width, height, fg_color=get_color('black'),
-            bg_color=get_color('grey'), text=None, font=u'Verdana.ttf',
-            fontsize=42, encoding='', mode='RGBA'):
+    def __init__(self, width, height, fg_color='darkgrey', bg_color='lightgrey',
+            text=None, font='arial', fontsize=36, encoding='',
+            mode='RGBA'):
         """
         Create an image usable for wireframing websites.
 
